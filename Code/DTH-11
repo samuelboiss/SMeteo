@@ -1,0 +1,17 @@
+#include "DHT.h"
+DHT capteur(2, DHT11);
+
+void setup() {
+   capteur.begin();
+   Serial.begin(9600);
+}
+
+void loop() {
+   float humidity = capteur.readHumidity();
+   float temperature = capteur.readTemperature();
+
+   Serial.print("Humidity: ");
+   Serial.print(humidity);
+   Serial.print("   Temperature: ");
+   Serial.println(temperature);
+}
