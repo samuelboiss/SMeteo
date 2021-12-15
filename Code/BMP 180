@@ -46,3 +46,34 @@ void loop(){
 
   delay(5000);
 }
+
+
+
+
+/// TEST REALISE AVANT LE CODE CI-DESSUS ///
+
+
+
+#include "Wire.h"
+#include "SFE_BMP180.h"
+
+SFE_BMP180 pressure;
+#define ALTITUDE 116.0
+
+void setup(){
+   Serial.begin(9600);
+   pressure.begin();
+}
+
+void loop(){
+     
+   char status;
+   double T,P,p0,a;
+
+    status = pressure.startPressure(3);
+    if (status != 0) {
+      delay(status);+
+      
+      status = pressure.getPressure(P, T);}
+      Serial.println(P, 2);
+}
