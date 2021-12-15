@@ -21,7 +21,7 @@ Les tests menés ont été satisfaisants.
 ## Séance du 15/12 :
 ### Tâches effectuées :
 
-Lors de cette séance nous avons récupérer l’anémomètre d’un précédent projet (celui de Victor Girard et Benjamin Ferrer) que nous avons démonter pour en connaitre les composants et le fonctionnement. Nos tentatives de mise en marche de l’anémomètre n’étant pas fructueuses, nous l’avons mis de côté et avons débuter l’étude du capteur de luminosité LDR.
+Lors de cette séance nous avons récupérer l’anémomètre d’un précédent projet (celui de Victor Girard et Benjamin Ferrer) que nous avons démonter pour en connaitre les composants et le fonctionnement. Nos tentatives de mise en marche de l’anémomètre n’étant pas fructueuses, nous l’avons mis de côté et avons débuté l’étude du capteur de luminosité LDR.
 
 Nous avons fait l’étude du capteur LDR (luminosité) et l’avons mis en marche. 
 Nous avons mené nos tests dans différentes conditions (plein soleil, ombre, salle de classe) et sommes satisfaits des résultats obtenus. Nous avons à présent pour but de convertir les mesures du capteur en lumens.
