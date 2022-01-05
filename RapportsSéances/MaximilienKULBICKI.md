@@ -39,3 +39,15 @@ Nous avons mené nos tests dans différentes conditions (plein soleil, ombre, sa
 -	Finir la conversion des mesures du capteur LDR en lumens.
 -	Adapter le code de l’anémomètre pour nos besoins.
 
+## Séance du 05/01 :
+### Tâches effectuées :
+
+Au cours de cette séance, je me suis repenché sur l’anémomètre (de Victor Girard et Benjamin Ferrer) que nous avions mis de côté lors de la dernière séance. 
+
+La documentation de ce projet m’a fait comprendre l’ensemble du montage du boitier et le code utilisé dans l’anémomètre/ girouette. J’ai ainsi repris et modifié ce code afin de le faire fonctionner dans notre projet (suppression de code inutile et adaptation des I/O utilisées). Lors des tests de l’appareil, l’anémomètre renvoie des valeurs (vitesses) satisfaisantes.
+
+Cependant, la girouette était complètement déréglée et renvoyait des directions qui ne collaient pas avec celles de la boussole de mon téléphone. Puisque la girouette renvoie un signal analogique (0-1023) selon sa direction, j’ai arrangé les plages de valeurs pour que la direction de la girouette corresponde à celle de la boussole en orientant initialement l’anémomètre plein ouest.
+
+Une fois l’anémomètre opérationnel, j’ai repris l’étude du capteur LDR et mené des recherches afin de convertir les valeurs renvoyées par celui-ci en lumens. Il s’est avéré qu’établir une échelle en lumens était trop complexe car cela demande d’avoir à disposition différentes sources de lumières dont on connait le flux lumineux et en déduire une relation avec les valeurs du capteur. On se contentera donc d’une échelle « simple » situant la valeur de notre capteur entre « Plein ciel »/ « Ciel nuageux »/ « Ciel obscurci »/ « Nuit ».
+
+
