@@ -65,4 +65,5 @@ Pour le module ESP32, j’ai commencé par étudier sa documentation et notammen
 -	Documentation sur le module ESP32 (pinLayout / bibliothèque Wifi).
 -	Ecriture d’un programme afin de tester le fonctionnement de l’ESP32. 
 -	Etude de la librairie SPIFFS servant à écrire/lire/modifier des fichiers dans la mémoire flash de l’ESP32. 
+-	Ecriture d'un programme permettant de lancer l'ESP32 comme serveur.
 
