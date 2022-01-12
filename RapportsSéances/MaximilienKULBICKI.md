@@ -50,4 +50,19 @@ Cependant, la girouette était complètement déréglée et renvoyait des direct
 
 Une fois l’anémomètre opérationnel, j’ai repris l’étude du capteur LDR et mené des recherches afin de convertir les valeurs renvoyées par celui-ci en lumens. Il s’est avéré qu’établir une échelle en lumens était trop complexe car cela demande d’avoir à disposition différentes sources de lumières dont on connait le flux lumineux et en déduire une relation avec les valeurs du capteur. On se contentera donc d’une échelle « simple » situant la valeur de notre capteur entre « Plein ciel »/ « Ciel nuageux »/ « Ciel obscurci »/ « Nuit ».
 
+## Séance du 12/01 :
+### Tâches effectuées :
+
+Lors de cette séance, nous avons rassemblé tous les modules (LDR, DTH11, BMP180, anémomètre, girouette) sur la même carte Arduino et avons mis en commun les codes de chaque module. Ainsi, on est d’ores et déjà en mesure de recueillir un certain nombre de données sur notre Arduino et de les afficher sur le moniteur série. 
+Par la suite, nous avons récupéré de nouveaux modules : un module ESP32 pour transmettre les données recueillies par l’Arduino vers notre site web (par Wifi) ; un capteur de radiation ; un capteur PM 2.5 mesurant la qualité de l’air. 
+Nous avons commencé l’étude du module ESP32 et du module qualité de l’air. 
+
+Pour le module ESP32, j’ai commencé par étudier sa documentation et notamment l’utilité de chaque pin (GPIO/SPI/I2C) et rechercher un moyen d’écrire/lire des fichiers dans la mémoire flash de l’ESP32. La librairie SPIFFS semble répondre à ce besoin. 
+
+### Travail personnel :
+-	Réécriture du code afin de faire fonctionner chaque module ensemble.
+-	Montage de tous les capteurs sur une même Arduino.
+-	Documentation sur le module ESP32 (pinLayout / bibliothèque Wifi).
+-	Ecriture d’un programme afin de tester le fonctionnement de l’ESP32. 
+-	Etude de la librairie SPIFFS servant à écrire/lire/modifier des fichiers dans la mémoire flash de l’ESP32. 
 
