@@ -67,3 +67,30 @@ Pour le module ESP32, j’ai commencé par étudier sa documentation et notammen
 -	Etude de la librairie SPIFFS servant à écrire/lire/modifier des fichiers dans la mémoire flash de l’ESP32. 
 -	Ecriture d'un programme permettant de lancer l'ESP32 comme serveur.
 
+
+## Pause pédagogique du 24/01 au 30/01 :
+Tout au long de la pause pédagogique, j’ai cherché à ajouter notre fichier HTML au module ESP32 et faire le pont entre celui-ci et l’Atmel328 pour l’échange de données. 
+Dans un premier temps, j’ai exploré les exemples proposés par l’IDE d’Arduino pour voir les utilisations du module ESP32. Dans la catégorie « WebServer », l’exemple de « AdvancedWeb
+Server » permet de lancer notre module ESP comme serveur en le connectant à un réseau (passé en paramètre dans notre code). J’ai opté pour cet exemple car il permet également d’insérer facilement un code HMTL qui sera à la racine de notre serveur. Ainsi, après avoir chargé notre site sur le module et l’avoir branché, nous sommes capables d’afficher notre site sur un navigateur (sur une machine connectée au même réseau que l’ESP32). De plus, puisque le code HTML s’actualise toutes les secondes sur le module, le site est très régulièrement mis à jour (cela permettra ainsi de mettre à jour les valeurs de nos mesures sur notre site). 
+
+Dans un second temps, je me suis intéressé à la librairie SoftwareSerial permettant de faire le raccord entre 2 cartes Arduino (ici entre l’Arduino et l’ESP32). Notre but étant d’envoyer une liste d’informations de l’arduino vers l’ESP, j’ai arrangé le code gérant les capteurs afin que chaque mesure soit stockée dans une liste de chaine de caractères, et ne soit plus simplement affichée sur le moniteur. Ainsi, j’ai dû écrire une fonction « SendData() » envoyant ladite liste de mesures. Par souci de fluidité, j’ai également écrit une fonction « waiting() », qui bloque l’envoie de nouvelles mesures tant que l’ESP32 n’envoie pas de réponse à l’Arduino (validant la réception des mesures précédentes). Du coté de l’ESP32, la fonction « readData() » permet de « découper » les informations reçues, puis de les insérer dans le code HMTL à la racine du serveur ESP. 
+
+Voici ce qui résulte de ce travail :
+![site_beta](https://user-images.githubusercontent.com/95374519/151860600-a35ab465-8166-48f8-96f6-fcd4f00407a8.png)
+ 
+N’ayant pas tous les modules à disposition, j’ai arbitrairement mis des valeurs pour la pression et l’anémomètre. Ainsi, la température et l’humidité sont régulièrement mis à jour.
+On remarque des soucis d’affichage pour les chaines de caractères, ce qui constituera notre objectif pour les prochaines séances. 
+
+## Séance du 31/01 : 
+Au cours de cette séance, l’objectif était de faire fonctionner l’ensemble des modules et d’observer le résultat sur le site hébergé par l’ESP32. 
+Après avoir effectué tous les branchements, on constate sur le moniteur série qu’aucune donnée n’est transmise et le code de l’Arduino ne s’exécute pas. En débranchant certains modules et à l’aide d’affichages Serial.print(), on remarque que le capteur de pression BMP180 bloque l’exécution du code de l’Arduino lors de l’appel à la fonction « pressure.begin() » (initialisation de l’objet permettant de récolter la pression). Ne sachant pas s’il s’agissait d’un problème matériel ou non, j’ai isolé la carte Arduino et le capteur BMP180, puis j’ai téléversé le code nécessaire au fonctionnement du capteur seul. Le moniteur série indique alors que le capteur relève bel et bien la pression (environ 1000 mb). 
+Ainsi, la source de problème résiderait dans les branchements ou dans l’implémentation du code du capteur BMP180 dans le code gérant l’ensemble des capteurs.
+Objectif des prochaines séances :
+-	Revoir l’implémentation du code du BMP180 
+-	Intégrer les nouveaux capteurs (qualité de l’air et capteur de radiation) au code 
+-	Corriger l’affichage des chaines de caractères sur la page HTML.
+
+Voici une photo du montage simple du capteur BMP180, fonctionnant avec l’Atmel tout comme avec l’Arduino :
+ 
+
+![BMP180_succes1](https://user-images.githubusercontent.com/95374519/151860928-8824cde2-2621-49f9-99ef-07d974fe1ff1.png)
