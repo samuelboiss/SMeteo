@@ -98,7 +98,9 @@ Voici une photo du montage simple du capteur BMP180, fonctionnant avec l’Atmel
 ## Séance du 07/02 :
 Lors de cette séance, notre objectif a été d’implémenter les deux capteurs (PM2.5 Sensor et Pocket Geiger Type 5+), préparés par Samuel, à l’Arduino gérant l’ensemble des capteurs. 
 Dans un premier temps, il m’a fallu arranger le code de chaque capteur afin qu’on puisse envoyer les données mesurées vers l’ESP32. Cela consistait à changer les procédures affichant directement les mesures par des fonctions renvoyant une chaine de caractères.
+
 Par la suite, nous avons dû modifier la librairie utilisée par le capteur Pocket G (« RadiationWatch.h ») puisque celui-ci utilisait des pins déjà attribués à l’anémomètre et à la girouette (I/O 2 et 3). Cela s’est fait assez aisément en se référant à la documentation accompagnant ce capteur (https://github.com/MonsieurV/ArduinoPocketGeiger.git). Cependant, lors des premiers essaies d’envoie de données vers l’ESP32, l’Arduino ne transmettait aucune information. Il s’agissait d’un défaut de câble qui empêchait l’alimentation des capteurs et donc de l’exécution du code. 
+
 Finalement, le pont entre l’ESP32 et l’Arduino s’est établit et les données se sont correctement envoyées. On remarque cependant que l’Arduino effectue l’envoie de notre liste de données seulement deux fois et se bloque ensuite. Il s’agit très probablement d’une mauvaise gestion de la réception des données du côté de l’ESP32, ce qui reste un problème traitable. Encore faut-il qu’on trouve une solution pour l’affichage des chaines de caractères pour le site. 
 
 ### Objectifs des prochaines séances : 
