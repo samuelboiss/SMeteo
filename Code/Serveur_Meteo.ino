@@ -4,8 +4,8 @@ const int rx = 12;
 SoftwareSerial MySerial(rx,tx);
 
 String inputString ="";
-String result[7];
-int i=0;
+String result[10];
+
 
 //##################################//
 #include <WiFi.h>
@@ -13,12 +13,10 @@ int i=0;
 #include <WebServer.h>
 #include <ESPmDNS.h>
 
-const char *ssid = "Abracadabra";
+const char *ssid = "Abracadabra-N";
 const char *password = "blipblop";
 
 WebServer server(80);
-
-const int led = 13;
 
 void handleRoot() {
   char caracteres[3500];
@@ -152,34 +150,20 @@ void loop(void) {
   waiting(); // on attend qu'il y ait qqc sur le pin rx
   readData();
   
-  for(int j=0; j<6;j++){ // on imprime res
+  for(int j=0; j<10;j++){ // on imprime res
     Serial.println(result[j]);
   }
-  Serial.println("##################");
-  i=0;// on reset i
-  MySerial.print("OK"); // envoie une reponse à l'arduino
-  
+  Serial.println("###############################"); // marque la séparation entre chaque serie de mesures
   server.handleClient();
   delay(2);//allow the cpu to switch to other tasks
-}
 
-//#######################################
-void addToResult(){ // ajoute dans tableau de resultat 
-  if (i <6){
-    result[i] = inputString; // on ajoute la mesure dans un tableau
-    inputString = ""; // on vide inputString
-    i++;
-  }
-  else{
-    i=0;
-    result[i] = inputString; // on ajoute la mesure dans un tableau
-    inputString = ""; // on vide inputString
-    }
 }
+//#######################################
+
 //#########################################
 void waiting(){
   while(!MySerial.available()){ // tant qu'il n'y a rien a lire
-    Serial.print(".");
+    Serial.print(".0");
     delay(1000);
   }
   Serial.println(" ");
@@ -189,13 +173,14 @@ void waiting(){
 void readData() {
   while (MySerial.available()) {
     char inChar = (char)MySerial.read();
-    if (inChar != '\n') {
+    if (inChar != '$') {
       inputString += inChar;
     }
-    else{
-      result[i] = inputString; // on ajoute la données dans le tableau resultat
+    else{ // if  == $
+      char indice = MySerial.read(); // on recolte l'indice de l'info
+      int e = indice - '0'; //  technique illegale pour convertir un caractere en entier
+      result[e] = inputString; // on ajoute la données dans le tableau resultat
       inputString = ""; // on vide la chaine
-      i++;
       }
   }
 }
