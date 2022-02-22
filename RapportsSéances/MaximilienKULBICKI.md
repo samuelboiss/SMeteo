@@ -108,4 +108,29 @@ Finalement, le pont entre l’ESP32 et l’Arduino s’est établit et les donn�
 -	Faire en sorte que l’Arduino envoie les mesures en continu
 -	Vérifier le bon fonctionnement de l’ensemble des capteurs avec l’Arduino et l’ESP32. 
  
+## Séance du 21/02:
+Au cours de cette séance, Samuel et moi avons mis en commun le travail effectué durant la pause pédagogique. Lui m’a montré le design de la boite et je lui ai partagé les corrections que j’ai apporté au code.
+Nous avions quelques problèmes à gérer à la fin de la dernière séance.
+Pour régler le problème d’envoi de données (qui ne se faisait que deux fois), j’ai modifié la façon dont les données été envoyées vers l’ESP32. En effet, dans notre ancien modèle : on récupère nos mesures, on les envoie vers l’ESP, l’arduino attend une réponse de la part de l’esp pour effectuer à nouveau les mesures, l’esp récupère ces données et les classes dans un tableau, puis envoie une réponse à l’arduino et attend pour la lecture de nouvelles données. Le fait que l’esp32 envoyait une réponse à l’arduino perturbait la fonction waiting() de l’esp32 (qui attendait que des données soient disponibles dans le buffer…) qui interprétait la réponse de l’ESP32 comme de nouvelles données de l’arduino. Il en résultait que l’arduino attendait perpétuellement une réponse de l’ESP32 (qui était lu par l’esp et non l’arduino). J’ai ainsi supprimé waiting() du côté de l’arduino qui envoie à présent les données en continu sans attente de réponse de l’esp. 
+Quant à l’affichage des données sur la page HTML, j’ai compris après quelques tests que le site ne pouvait afficher une variable de plus de 9 caractères. Pour y remédier il a tout simplement fallu réduire la longueur des chaines de caractères envoyées. 
+En mettant tous les capteurs ensemble on a remarqué quelques failles : 
+-	Pour le PMSensor, l’une des fonctions nécessaire au prélèvement de mesures fait apparaitre un compteur (il s’agit de « sum » dans readPMSdata() ) qui permet de compter le nombre de bits reçus par le PMSensor. Celui-ci est comparé à un autre compteur (« checksum » qui est le nombre de bits envoyé) qui est modifié dans le PMSensor et non à chaque appel du code dans l’arduino. En raison du délai d’une seconde dans notre loop(), ces deux compteurs se désynchronisaient, ce qui empêchait la lecture des mesures du PMSensor. 
+Ainsi, il a fallu réduire le délai dans le loop() et ajouter du code dans readPMSdata() pour permettre la lecture de mesures en continu. 
 
+-	Lors du téléversement de notre croquis sur l’arduinoUNO, on remarque que 85% de la mémoire dynamique (2ko) est occupé par nos variables globales, ce qui empêche la bonne exécution du code. Mr Masson nous a donc préparé une ArduinoMega2600 qui possède bien plus de mémoire dynamique (8ko). J’ai donc supprimé tous les objets SoftwareSerial de notre code puisque l’arduinoMega possède par défaut 3 ports RX/TX.
+
+-	Pour optimiser la gestion de la mémoire dynamique, j’ai réduit le nombre de variables globales. De plus, j’ai appris que l’utilisation de « String » dans le code ajouté toutes les bibliothèques liées à l’objet « String », ce qui occupe davantage de mémoire et d’espace. On m’a suggéré d’utiliser « char* » au lieu. Par ailleurs, afin de supprimer totalement l’utilisation de « String » dans le code, il m’a fallu changer ce qui nous permettait de stocker les mesures : un tableau de « string », ce qui me forçait à convertir toutes les mesures en « string »… Pour résoudre ce problème, j’ai remplacé le tableau de mesures par une structure, ce qui permet d’accueillir des valeurs hétérogènes. 
+Finalement, j’ai reformulé la collecte des mesures et l’envoi des données vers l’ESP32 (en écrivant « sendAlldata() » et « collectData() »).
+Il sera peut-être possible que l’on s’affranchisse de l’arduinoMega et que l’on poursuive notre travail sur l’arduinoUno, puisque la mémoire dynamique occupée s’est vu réduite. 
+
+-	Dans l’implémentation du PocketG, nous avons du mal à récupérer les données mesurées par le capteur. En effet, l’affichage des données sur le moniteur se fait grâce à une fonction (radiation.loop() ) définie dans la bibliothèque accompagnant le capteur. Ainsi, il nous faut encore étudier en profondeur cette bibliothèque et dégager la fonction renvoyant les mesures. 
+Il nous reste encore à trouver un moyen de rendre notre projet indépendant de nos ordinateurs (recourt aux batteries) et d’agencer tous nos capteurs dans le réceptacle que nous sommes en train de produire. 
+
+Données envoyées par l’arduino :
+![moniteur](https://user-images.githubusercontent.com/95374519/155217702-6c2d5232-c516-49aa-80dc-619c80cfa776.png)
+
+Montage sans le PocketG et l’anémomètre :
+![montage](https://user-images.githubusercontent.com/95374519/155217677-ad5647e8-a255-4fbd-bea1-27d5aa18ad52.jpg)
+
+Résultat sur la page web :
+![Site_gamma](https://user-images.githubusercontent.com/95374519/155217646-64b1050a-0281-4170-9a1f-14d72320d68d.png)
