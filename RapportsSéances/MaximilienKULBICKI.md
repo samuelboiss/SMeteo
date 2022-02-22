@@ -110,9 +110,13 @@ Finalement, le pont entre l’ESP32 et l’Arduino s’est établit et les donn�
  
 ## Séance du 21/02:
 Au cours de cette séance, Samuel et moi avons mis en commun le travail effectué durant la pause pédagogique. Lui m’a montré le design de la boite et je lui ai partagé les corrections que j’ai apporté au code.
+
 Nous avions quelques problèmes à gérer à la fin de la dernière séance.
+
 Pour régler le problème d’envoi de données (qui ne se faisait que deux fois), j’ai modifié la façon dont les données été envoyées vers l’ESP32. En effet, dans notre ancien modèle : on récupère nos mesures, on les envoie vers l’ESP, l’arduino attend une réponse de la part de l’esp pour effectuer à nouveau les mesures, l’esp récupère ces données et les classes dans un tableau, puis envoie une réponse à l’arduino et attend pour la lecture de nouvelles données. Le fait que l’esp32 envoyait une réponse à l’arduino perturbait la fonction waiting() de l’esp32 (qui attendait que des données soient disponibles dans le buffer…) qui interprétait la réponse de l’ESP32 comme de nouvelles données de l’arduino. Il en résultait que l’arduino attendait perpétuellement une réponse de l’ESP32 (qui était lu par l’esp et non l’arduino). J’ai ainsi supprimé waiting() du côté de l’arduino qui envoie à présent les données en continu sans attente de réponse de l’esp. 
+
 Quant à l’affichage des données sur la page HTML, j’ai compris après quelques tests que le site ne pouvait afficher une variable de plus de 9 caractères. Pour y remédier il a tout simplement fallu réduire la longueur des chaines de caractères envoyées. 
+
 En mettant tous les capteurs ensemble on a remarqué quelques failles : 
 -	Pour le PMSensor, l’une des fonctions nécessaire au prélèvement de mesures fait apparaitre un compteur (il s’agit de « sum » dans readPMSdata() ) qui permet de compter le nombre de bits reçus par le PMSensor. Celui-ci est comparé à un autre compteur (« checksum » qui est le nombre de bits envoyé) qui est modifié dans le PMSensor et non à chaque appel du code dans l’arduino. En raison du délai d’une seconde dans notre loop(), ces deux compteurs se désynchronisaient, ce qui empêchait la lecture des mesures du PMSensor. 
 Ainsi, il a fallu réduire le délai dans le loop() et ajouter du code dans readPMSdata() pour permettre la lecture de mesures en continu. 
