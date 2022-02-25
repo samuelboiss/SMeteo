@@ -21,12 +21,16 @@ WebServer server(80);
 void handleRoot() {
   char caracteres[3500];
   
+  String light = result[0];
+  String pressure = result[1];
   String temp = result[2] ;
   String humidity = result[3];
-  String pressure = result[1];
-  String light = result[0];
   String wind = result[4];
   String girouette = result[5];
+  String part_03 = result[6];
+  String part_1 = result[7];
+  String part_5 = result[8];
+  String rad = result[9];
   
   snprintf(caracteres, 3500,
   
@@ -43,6 +47,7 @@ void handleRoot() {
       h3 {color : lightseagreen; text-decoration : underline;}\
       h4 {color : navy; text-align : center;}\
       .cols {float: left; width: 200px; margin-left: 50px; margin-right: 50px; margin-bottom : 75px; text-align : center; border : 2px solid lightseagreen; background-color :#d6ebee ; color: navy;}\
+      .cols2 {float: left; width: 22%; margin-left: 17%; margin-right: 1%; margin-bottom: 75px; text-align: center; border: 2px solid lightgreen; background-color: #d6ebee; color: navy;}\
       #suite {clear: both;}\
     </style>\
   </head>\
@@ -69,6 +74,16 @@ void handleRoot() {
         <h4>Vent</h4>\
         <p>La vitesse du vent est de %s m/s et son orientation est : %s </p>\
       </article>\
+      <article class='cols'>\
+        <h4>Qualité de l'air</h4>\
+        <p>Particules de plus de 0.3um/0.1L: %s </p>\
+        <p>Particules de plus de 1um/0.1L: %s </p>\
+        <p>Particules de plus de 5um/0.1L: %s </p>\
+      </article>\
+      <article class='cols'>\
+        <h4>Radioactivité</h4>\
+        <p>Radiation détectée: %s uSv</p>\
+      </article>\
     </div>\
     <div id='suite'>\
       <h3> Les modules </h3>\
@@ -89,7 +104,7 @@ void handleRoot() {
   </body>\
 </html>",
 
-    temp, humidity, pressure, light, wind, girouette
+    temp, humidity, pressure, light, wind, girouette, part_03 , part_1, part_5, rad
 
          );
   server.send(200, "text/html", caracteres);

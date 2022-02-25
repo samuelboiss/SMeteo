@@ -10,13 +10,17 @@ SoftwareSerial MySerial(rxSf,txSf);
 String mesureToSend[10]; // tableau qui contiendra les mesures
 char text[20]; // servira pour la conversion entier -> string
 */
+
+String inputString ="";
+String resultFromArd[3];
+
 struct mesureToSend{
   char* light_mesure;
-  double pressure_mesure;
+  String pressure_mesure;
   int temp_mesure;
   int hum_mesure;
-  float wind_mesure;
-  char* girouette_mesure;
+  String wind_mesure;
+  String girouette_mesure;
   float part_03_mesure;
   float part_10_mesure;
   float part_50_mesure;
@@ -59,9 +63,10 @@ RadiationWatch radiationWatch;
 void setup() {
    Serial.begin(9600);
    Serial1.begin(4800);
+   Serial3.begin(4800);
    
    //Pression//
-   pressure.begin();
+
    
    // Lumiere //
    pinMode(LDR, INPUT);
@@ -77,13 +82,14 @@ void setup() {
    
 
    // Radiation //
-  // radiationWatch.setup();
-   //radiationWatch.registerRadiationCallback(&onRadiation);
-   //radiationWatch.registerNoiseCallback(&onNoise);
+   radiationWatch.setup();
+   radiationWatch.registerRadiationCallback(&onRadiation);
+   radiationWatch.registerNoiseCallback(&onNoise);
 }
 
 void loop() {
-  //radiationWatch.loop();
+  radiationWatch.loop();
+  readData();
   
  // Favoriser une structure pour le stockage des mesures au lieu d'une liste
   collect_data();
@@ -92,13 +98,13 @@ void loop() {
 // ########################################## //
 void collect_data(){ // stores all the collected data in the dataToSend structure
   dataToSend.light_mesure = light();
-  dataToSend.pressure_mesure = 1013;//pression();
+  dataToSend.pressure_mesure = resultFromArd[0];
   dataToSend.temp_mesure = temperature();
   dataToSend.hum_mesure = humidity();
-  dataToSend.wind_mesure = 20 ; //meassure();
-  dataToSend.girouette_mesure = "OUEST"; //girouette();
+  dataToSend.wind_mesure = resultFromArd[1];
+  dataToSend.girouette_mesure = resultFromArd[2];
   qualite_air();
-  dataToSend.rad_mesure = 10; // radiation.watch()
+  dataToSend.rad_mesure = radiationWatch.uSvh();
  
   
 }
@@ -283,17 +289,6 @@ void qualite_air() {
 
 // ###########################################
 // ########################################### // 
-/*
-String radiationString () {
-  if (radiationWatch.uSvh() > 0.20 or radiationWatch.uSvh() < 0.04) {
-    rad_texte = radiationWatch.uSvh() + ' uSv/h +/- --> Be careful outside';
-    return rad_texte;
-  }
-  else {
-    rad_texte = radiationWatch.uSvh() + ' uSv/h +/- --> Everything OK';
-    return rad_texte;
-  }
-}*/
 
 //############################################ //
 void onNoise()
@@ -322,4 +317,19 @@ void sendAllData(){
   Serial1.print(dataToSend.part_50_mesure);Serial1.print('$');Serial1.print(8);Serial.print("---SENT---> ");Serial.println(dataToSend.part_50_mesure);
   Serial1.print(dataToSend.rad_mesure);Serial1.print('$');Serial1.print(9);Serial.print("---SENT---> ");Serial.println(dataToSend.rad_mesure);
   Serial.println("###############");
+}
+// #######################################
+void readData() {
+  while (Serial3.available()) {
+    char inChar = (char)Serial3.read();
+    if (inChar != '$') {
+      inputString += inChar;
+    }
+    else{ // if  == $
+      char indice = Serial3.read(); // on recolte l'indice de l'info
+      int e = indice - '0'; //  technique illegale pour convertir un caractere en entier
+      resultFromArd[e] = inputString; // on ajoute la données dans le tableau resultat
+      inputString = ""; // on vide la chaine
+      }
+  }
 }
