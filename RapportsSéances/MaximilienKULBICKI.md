@@ -138,3 +138,25 @@ Montage sans le PocketG et l’anémomètre :
 
 Résultat sur la page web :
 ![Site_gamma](https://user-images.githubusercontent.com/95374519/155217646-64b1050a-0281-4170-9a1f-14d72320d68d.png)
+
+
+## Séance du 28/02:
+
+Lors de cette séance, mon objectif a été de finaliser les branchements de notre projet afin de pouvoir le disposer dans notre réceptacle. 
+
+Avant de brancher quoique soit et afin de supprimer tout éventuelle erreur liée au PMSensor (de par la présence de delay() dans le code), j’ai déplacé tous les capteurs faisant appel à un delay() (i.e le BMP180 et l’anémomètre) sur une même carte arduino uno. Ainsi, il m’a fallu créer un nouvel objet SoftwareSerial() afin de récupérer les données mesurées par cette arduino uno et les envoyer sur l’arduino Mega. Ce faisant, j’ai pu supprimé toute trace de delay() dans le code de la Mega (qui gère le PMSensor). Afin de récupérer les données envoyées par l’arduino uno, j’ai rajouté des fonctions permettant de les lire dans le code de la Mega (readData()). Après quelques essais, nous avons remarqué que la liaison et l’envoie de données entre l’arduino uno et la Mega se faisait sans problème. 
+
+Par la suite, en essayant de relier les deux cartes précédentes à l’esp32, une erreur de communication est apparue : l’esp32 ne recevait aucune donnée de l’arduino Mega. Après de longues minutes de recherche, il s’est avéré qu’il s’agissait d’un câble défaillant qui n’assurait pas la connexion entre les deux cartes. Une fois le problème réglé, la page web recensant toutes les mesures s’affichait correctement. Ainsi, l’ensemble des modules fonctionne et il nous est possible d’afficher ce que l’on mesure sur notre page web. Nous avons donc achevé le circuit de notre projet. 
+
+Afin de rendre notre projet indépendant, nous alimenterons les cartes uno, esp32 et Mega grâce à des batteries externes. Nous en disposons déjà de deux de 5V, ce qui couvre l’arduino uno et l’esp. Il nous faut donc une dernière batterie (7V minimum) pour la Mega. 
+
+Finalement, nous retirerons la breadboard afin de rendre l’ensemble plus ergonomique. 
+
+Voici le montage de l’Esp32 et la Mega2650 dans la boite conçue par Samuel :
+![IMG-0239](https://user-images.githubusercontent.com/95374519/156053624-fa519e5d-4512-4faa-8a75-12ae3f47954d.jpg)
+
+Voici le montage de l’arduino gérant l’anémomètre et le BMP180 :
+![IMG-0240](https://user-images.githubusercontent.com/95374519/156053683-b3c91d77-d719-41be-8a8b-8502d6086ec5.jpg)
+
+Voici le montage final :
+![IMG-0238](https://user-images.githubusercontent.com/95374519/156053588-7ff9b7f0-0301-47ae-af63-b6c26305c01b.jpg)
